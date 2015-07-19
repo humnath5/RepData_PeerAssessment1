@@ -1,13 +1,13 @@
 # Reproducible Research: Peer Assessment 1
 
 
-
 ## Loading and preprocessing the data
 As suggested by assignment instructions,"RepData_PeerAssessment" Repository was forked and cloned in local machine and made as working directory.
 
 
 ```r
      #loading and processing data 
+      unzip("activity.zip")
       data =read.csv("activity.csv")
       data$date <- as.Date(data$date)
       data$interval<-sprintf("%04d",data$interval)
@@ -27,7 +27,7 @@ As suggested by assignment instructions,"RepData_PeerAssessment" Repository was 
            xlab="total steps",col = "Blue")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+![](figure/unnamed-chunk-2-1.png) 
 
  **Mean and Median total steps per day**
 
@@ -53,7 +53,7 @@ median total steps per day : **10765.00**
                 col="red",lwd = 2)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+![](figure/unnamed-chunk-4-1.png) 
 
 ```r
       maxSteps <-max(meanByInterval)
@@ -85,18 +85,6 @@ Replacing NAs by mean steps per intervals over all days:
         library(dplyr)
 ```
 
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
 
 ```r
         missPosition <- which(missedData==TRUE)
@@ -118,7 +106,7 @@ Ploting histogram :
                   xlab="total steps ")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+![](figure/unnamed-chunk-8-1.png) 
 
 Calculating mean and median total steps per day in filled dataset:
 
@@ -166,7 +154,10 @@ Result shows  mean doesnot change but median changes by filling NAs using mean s
          print(p)
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
+![](figure/unnamed-chunk-10-1.png) 
+
+Plot in  weekend is more dense than plot  in weekday which means there were more activities 
+during weekend.
 
 
 

@@ -11,6 +11,7 @@ As suggested by assignment instructions,"RepData_PeerAssessment" Repository was 
 
 ```{r,cache=TRUE}
      #loading and processing data 
+      unzip("activity.zip")
       data =read.csv("activity.csv")
       data$date <- as.Date(data$date)
       data$interval<-sprintf("%04d",data$interval)
@@ -19,7 +20,7 @@ As suggested by assignment instructions,"RepData_PeerAssessment" Repository was 
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+```{r,fig.path="figure/"}
       missedData <- is.na(data$steps)
       pureData   <- data[!missedData,]
       totalsteps <- tapply(pureData$steps,pureData$date,sum)
@@ -42,7 +43,7 @@ median total steps per day : **`r sprintf("%.2f",mediansteps)`**
 
 ## What is the average daily activity pattern?
 
-```{r}
+```{r,fig.path="figure/"}
       meanByInterval <-tapply(pureData$steps,pureData$interval,mean)
       timeInterval<-unique(pureData$interval)                                        
       plot(timeInterval,meanByInterval,
@@ -72,8 +73,11 @@ Total number of missing data : **`r num_missData`**
 
 Replacing NAs by mean steps per intervals over all days:
 
-```{r}
+```{r, message=FALSE}
         library(dplyr)
+```
+
+```{r}
         missPosition <- which(missedData==TRUE)
         temp<-data$steps  #temporary variable
         temp[missPosition] <-meanByInterval[paste(data$interval[missPosition], "", sep = "")]
@@ -85,7 +89,7 @@ Replacing NAs by mean steps per intervals over all days:
 ```
 
 Ploting histogram :
-```{r}
+```{r,fig.path="figure/"}
         totalStepsFilled <- tapply(dataFilled$stepsFilled,dataFilled$date,sum)
         hist(totalStepsFilled,
                   main="Histogram of total steps per day in filled dataset",
@@ -109,7 +113,7 @@ Result shows  mean doesnot change but median changes by filling NAs using mean s
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+```{r,fig.path="figure/"}
           library(tidyr)
           library(lattice)
           dataFilled$interval <-as.factor(dataFilled$interval)
@@ -136,6 +140,9 @@ Result shows  mean doesnot change but median changes by filling NAs using mean s
                               )
          print(p)
 ```
+
+Plot in  weekend is more dense than plot  in weekday which means there were more activities 
+during weekend.
 
 
 
