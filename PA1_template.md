@@ -1,15 +1,12 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
+
 
 
 ## Loading and preprocessing the data
 As suggested by assignment instructions,"RepData_PeerAssessment" Repository was forked and cloned in local machine and made as working directory.
 
-```{r,cache=TRUE}
+
+```r
      #loading and processing data 
       data =read.csv("activity.csv")
       data$date <- as.Date(data$date)
@@ -19,7 +16,8 @@ As suggested by assignment instructions,"RepData_PeerAssessment" Repository was 
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
       missedData <- is.na(data$steps)
       pureData   <- data[!missedData,]
       totalsteps <- tapply(pureData$steps,pureData$date,sum)
@@ -29,31 +27,40 @@ As suggested by assignment instructions,"RepData_PeerAssessment" Repository was 
            xlab="total steps",col = "Blue")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
  **Mean and Median total steps per day**
-```{r}
+
+```r
     meansteps <- mean(totalsteps)
     mediansteps <-median(totalsteps)
 ```
 
-mean total steps per day : **`r sprintf("%.2f", meansteps)`** 
+mean total steps per day : **10766.19** 
 
-median total steps per day : **`r sprintf("%.2f",mediansteps)`**
+median total steps per day : **10765.00**
 
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
       meanByInterval <-tapply(pureData$steps,pureData$interval,mean)
       timeInterval<-unique(pureData$interval)                                        
       plot(timeInterval,meanByInterval,
                 type="l",main="Avarage daily Steps per Intervals",
                 xlab="Interval[HM format]",ylab="Average steps",
                 col="red",lwd = 2)
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
       maxSteps <-max(meanByInterval)
       Interval_of_max <-timeInterval[which(meanByInterval==maxSteps)]
 ```
 
-The maximum average steps over all days: **`r maxSteps `** 
+The maximum average steps over all days: **206.1698113** 
 
 Maximum average steps was in the interval **"0835"**.
 
@@ -63,17 +70,35 @@ It means the activities  were highest during interval of **"8:35-8:40"**.
 
 ## Imputing missing values
 
-```{r}
+
+```r
        missedData <- is.na(data$steps)
        num_missData <-sum(missedData)
 ```
 
-Total number of missing data : **`r num_missData`** 
+Total number of missing data : **2304** 
 
 Replacing NAs by mean steps per intervals over all days:
 
-```{r}
+
+```r
         library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
         missPosition <- which(missedData==TRUE)
         temp<-data$steps  #temporary variable
         temp[missPosition] <-meanByInterval[paste(data$interval[missPosition], "", sep = "")]
@@ -81,11 +106,11 @@ Replacing NAs by mean steps per intervals over all days:
         
         dataFilled <- mutate(data,stepsFilled =stepsFilled)
         dataFilled<-select(dataFilled,stepsFilled,date,interval)
-       
 ```
 
 Ploting histogram :
-```{r}
+
+```r
         totalStepsFilled <- tapply(dataFilled$stepsFilled,dataFilled$date,sum)
         hist(totalStepsFilled,
                   main="Histogram of total steps per day in filled dataset",
@@ -93,23 +118,27 @@ Ploting histogram :
                   xlab="total steps ")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
 Calculating mean and median total steps per day in filled dataset:
 
-```{r}
+
+```r
           meanStepsFilled<- mean(totalStepsFilled)
           medianStepsFilled <-median(totalStepsFilled)
 ```
 
-**Mean** total steps per day in filled dataset : **`r sprintf("%.2f",meanStepsFilled)`**
+**Mean** total steps per day in filled dataset : **10766.19**
 
-**Median** total steps per day in filled data set : **`r sprintf("%.2f",medianStepsFilled)`**
+**Median** total steps per day in filled data set : **10766.19**
 
 Result shows  mean doesnot change but median changes by filling NAs using mean steps of corresponding interval.Also,mean and median values are same [at least upto two decimal places].
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
           library(tidyr)
           library(lattice)
           dataFilled$interval <-as.factor(dataFilled$interval)
@@ -136,6 +165,8 @@ Result shows  mean doesnot change but median changes by filling NAs using mean s
                               )
          print(p)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
 
 
